@@ -2,7 +2,6 @@
 // Created by Uthman Mohamed on 2023-09-22.
 //
 
-#include "../include/server.h"
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -50,29 +49,38 @@ int main() {
 
     /* wait for connection, then receive and print text */
     while (1) {
-        if ((client_fd = accept(fd, (struct sockaddr *) &sin, &len)) < 0) {
+        if ((client_fd = accept(fd, (struct sockaddr *) &sin, (socklen_t *)&len)) < 0) {
             perror("server: accept");
             exit(1);
         }
         printf("Connected to %s successfully!\n", inet_ntoa(sin.sin_addr));
+
         do {
             len = recv(client_fd, buf, sizeof(buf), 0);
 
             printf("Received message: ");
             print_all_chars(buf, sizeof(buf));
 
-            char *date_and_time = get_date_and_time();
+            // if client sends "Ciao-Ciao" then quit loop and close connection
+            if (strcmp(buf, "Ciao-Ciao\n") == 0) {
+                printf("\nClient disconnected!\n");
+                break;
+            }
 
-            sprintf(ret, "On %s you said: %s", date_and_time, buf);
+            sprintf(ret, "On %s you said: %s", get_date_and_time(), buf);
 
             // send message to client
             send(client_fd, ret, sizeof(ret), 0);
 
-            bzero(ret, sizeof(ret));
-            bzero(buf, sizeof(buf));
+            bzero(ret, MAX_LINE);
+            bzero(buf, MAX_LINE);
             fflush(stdout);
         } while (len);
+
+        // close connection if while loop above breaks
         close(client_fd);
+
+        printf("Waiting for new connection...\n");
     }
 }
 

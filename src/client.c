@@ -2,7 +2,6 @@
 // Created by Uthman Mohamed on 2023-09-22.
 //
 
-#include "../include/client.h"
 #include <stdio.h>
 #include <netinet/in.h>
 #include <stdlib.h>
@@ -52,22 +51,30 @@ int main(int argc, char *argv[]) {
     }
 
     printf("Connection established!\n");
+    printf("Enter 'Ciao-Ciao' to end the connection.\n");
+
+    printf("\x1b[33mEnter a message: \x1b[0m");
+    char *ret = fgets(buf, sizeof(buf), stdin);
 
     /* main loop: get and send lines of text */
-    char *ret;
-    do {
-        printf("\x1b[33mEnter a message: \x1b[0m");
-        ret = fgets(buf, sizeof(buf), stdin);
-
+    while (ret) {
+        if (send(server_fd, buf, strlen(buf) + 1, 0) <= 0) {
+            perror("client: send");
+            close(server_fd);
+            exit(1);
+        }
         buf[MAX_LINE - 1] = '\0';
-        send(server_fd, buf, strlen(buf) + 1, 0);
 
-        // receive message from server
-        recv(server_fd, buf, sizeof(buf), 0);
-
+        if (recv(server_fd, buf, sizeof(buf), 0) <= 0) {
+            printf("Server disconnected!\n");
+            close(server_fd);
+            exit(0);
+        }
         printf("\x1b[32mServer responded: \x1b[0m%s\n", buf);
 
-    } while (ret);
+        printf("\x1b[33mEnter a message: \x1b[0m");
+        ret = fgets(buf, sizeof(buf), stdin);
+    }
 
     return 0;
 }

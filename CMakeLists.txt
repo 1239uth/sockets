@@ -7,5 +7,3 @@ add_executable(server src/server.c)
 add_executable(client src/client.c)
 
 target_link_libraries(server pthread)
-
-include_directories(include)
