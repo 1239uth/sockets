@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 3.22)
 project(Client_Server_Sockets C)
 
 set(CMAKE_C_STANDARD 11)
