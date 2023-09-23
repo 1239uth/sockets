@@ -18,12 +18,12 @@ cd sockets
 ### 3. Run the server
 
 ```shell
-./run-server
+./run-server.sh
 ```
 
 ### 4. Run the client (in another terminal)
 
 ```shell
-./run-client
+./run-client.sh
 # defaults connecting to localhost:5432
 ```

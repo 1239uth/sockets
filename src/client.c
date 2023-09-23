@@ -58,6 +58,7 @@ int main(int argc, char *argv[]) {
 
     /* main loop: get and send lines of text */
     while (ret) {
+        // send message to server
         if (send(server_fd, buf, strlen(buf) + 1, 0) <= 0) {
             perror("client: send");
             close(server_fd);
@@ -65,6 +66,7 @@ int main(int argc, char *argv[]) {
         }
         buf[MAX_LINE - 1] = '\0';
 
+        // receive response from server
         if (recv(server_fd, buf, sizeof(buf), 0) <= 0) {
             printf("Server disconnected!\n");
             close(server_fd);
