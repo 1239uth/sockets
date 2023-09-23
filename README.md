@@ -2,26 +2,19 @@
 
 ## How to use
 
-### 1. Clone this repository
-
-```shell
-git clone https://github.com/1239uth/sockets.git
-cd sockets
-```
-
-### 2. Build the code
+### 1. Build the code
 
 ```shell
 ./build.sh
 ```
 
-### 3. Run the server
+### 2. Run the server
 
 ```shell
 ./run-server.sh
 ```
 
-### 4. Run the client (in another terminal)
+### 3. Run the client (in another terminal)
 
 ```shell
 ./run-client.sh
